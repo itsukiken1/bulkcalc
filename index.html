@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BulkCalc - Batch Profit Calculator for Cross-Border Sellers</title>
+<meta name="description" content="Calculate profit margins for multiple products at once. Paste your product list, get instant profit analysis with shipping, customs, and platform fees.">
+<style>
+:root {
+  --bg: #0f0f17;
+  --surface: #181824;
+  --surface2: #1e1e2e;
+  --border: #2a2a3e;
+  --text: #e0e0ec;
+  --text2: #7a7a96;
+  --accent: #6366f1;
+  --accent2: #818cf8;
+  --green: #22c55e;
+  --red: #ef4444;
+  --yellow: #eab308;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+/* Header */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 32px;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+}
+.header h1 {
+  font-size: 18px;
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--accent), #a78bfa);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.header-sub { font-size: 12px; color: var(--text2); }
+.header-right { display: flex; gap: 12px; align-items: center; }
+.header-right a {
+  font-size: 12px;
+  color: var(--accent2);
+  text-decoration: none;
+  padding: 6px 14px;
+  border: 1px solid var(--accent);
+  border-radius: 6px;
+}
+.header-right a:hover { background: rgba(99,102,241,0.1); }
+
+/* Main Layout */
+.main { max-width: 1200px; margin: 0 auto; padding: 24px 32px; }
+
+/* Settings Panel */
+.settings {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 18px 20px;
+  margin-bottom: 20px;
+}
+.setting label {
+  display: block;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text2);
+  margin-bottom: 4px;
+}
+.setting select, .setting input {
+  width: 100%;
+  padding: 8px 10px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text);
+  font-size: 13px;
+}
+.setting select:focus, .setting input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+/* Input Area */
+.input-section {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 18px 20px;
+  margin-bottom: 20px;
+}
+.input-section h2 {
+  font-size: 13px;
+  color: var(--text2);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 10px;
+}
+.input-hint {
+  font-size: 11px;
+  color: var(--text2);
+  margin-bottom: 10px;
+  background: var(--surface2);
+  padding: 8px 12px;
+  border-radius: 6px;
+  border-left: 3px solid var(--accent);
+}
+textarea {
+  width: 100%;
+  min-height: 160px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  font-family: 'SF Mono', 'Fira Code', Consolas, monospace;
+  font-size: 12px;
+  padding: 12px;
+  resize: vertical;
+}
+textarea:focus { outline: none; border-color: var(--accent); }
+textarea::placeholder { color: var(--text2); }
+
+/* Buttons */
+.btn-row {
+  display: flex;
+  gap: 10px;
+  margin-top: 12px;
+  flex-wrap: wrap;
+}
+.btn {
+  padding: 10px 24px;
+  border: none;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.btn-primary { background: var(--accent); color: white; }
+.btn-primary:hover { background: #4f46e5; }
+.btn-secondary { background: var(--surface2); color: var(--text); border: 1px solid var(--border); }
+.btn-secondary:hover { border-color: var(--accent); }
+.btn-green { background: var(--green); color: white; }
+.btn-green:hover { background: #16a34a; }
+.file-input { display: none; }
+
+/* Results */
+.results-section {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 18px 20px;
+  margin-bottom: 20px;
+  display: none;
+}
+.results-section.visible { display: block; }
+.results-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+}
+.results-header h2 {
+  font-size: 13px;
+  color: var(--text2);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Summary Stats */
+.summary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 10px;
+  margin-bottom: 16px;
+}
+.summary-card {
+  background: var(--surface2);
+  border-radius: 8px;
+  padding: 12px 14px;
+  text-align: center;
+}
+.summary-value { font-size: 20px; font-weight: 700; }
+.summary-label { font-size: 10px; color: var(--text2); text-transform: uppercase; }
+.val-green { color: var(--green); }
+.val-red { color: var(--red); }
+.val-accent { color: var(--accent2); }
+.val-yellow { color: var(--yellow); }
+
+/* Table */
+.table-wrap { overflow-x: auto; }
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+th {
+  text-align: left;
+  padding: 10px 12px;
+  background: var(--surface2);
+  color: var(--text2);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+  position: sticky;
+  top: 0;
+}
+td {
+  padding: 10px 12px;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  white-space: nowrap;
+}
+tr:hover td { background: rgba(99,102,241,0.04); }
+.profit-positive { color: var(--green); font-weight: 600; }
+.profit-negative { color: var(--red); font-weight: 600; }
+.sort-btn { cursor: pointer; user-select: none; }
+.sort-btn:hover { color: var(--accent2); }
+
+/* Footer */
+.footer {
+  text-align: center;
+  padding: 24px;
+  font-size: 11px;
+  color: var(--text2);
+  border-top: 1px solid var(--border);
+  margin-top: 40px;
+}
+.footer a { color: var(--accent2); text-decoration: none; }
+
+/* Responsive */
+@media (max-width: 768px) {
+  .main { padding: 16px; }
+  .header { padding: 12px 16px; }
+  .settings { grid-template-columns: 1fr 1fr; }
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div>
+    <h1>BulkCalc</h1>
+    <div class="header-sub">Batch Profit Calculator for Cross-Border Sellers</div>
+  </div>
+  <div class="header-right">
+    <a href="#" id="sourcecalcLink">Get SourceCalc Chrome Extension</a>
+  </div>
+</div>
+
+<div class="main">
+  <!-- Settings -->
+  <div class="settings">
+    <div class="setting">
+      <label>Target Market</label>
+      <select id="market">
+        <option value="US">USA</option>
+        <option value="UK">United Kingdom</option>
+        <option value="DE">Germany</option>
+        <option value="JP">Japan</option>
+        <option value="AU">Australia</option>
+        <option value="AE">UAE</option>
+        <option value="SA">Saudi Arabia</option>
+      </select>
+    </div>
+    <div class="setting">
+      <label>Platform</label>
+      <select id="platform">
+        <option value="amazon_fba">Amazon FBA</option>
+        <option value="amazon_fbm">Amazon FBM</option>
+        <option value="shopify">Shopify</option>
+        <option value="temu">Temu</option>
+        <option value="ebay">eBay</option>
+        <option value="tiktok">TikTok Shop</option>
+      </select>
+    </div>
+    <div class="setting">
+      <label>Shipping Method</label>
+      <select id="shipping">
+        <option value="sea">Sea Freight</option>
+        <option value="air">Air Freight</option>
+      </select>
+    </div>
+    <div class="setting">
+      <label>Product Weight (kg)</label>
+      <input type="number" id="weight" value="0.5" min="0.01" step="0.01">
+    </div>
+    <div class="setting">
+      <label>Customs Duty Rate (%)</label>
+      <input type="number" id="dutyRate" value="8" min="0" max="100" step="0.5">
+    </div>
+    <div class="setting">
+      <label>Exchange Rate (CNY/USD)</label>
+      <input type="number" id="exchangeRate" value="7.25" min="1" step="0.01">
+    </div>
+  </div>
+
+  <!-- Input -->
+  <div class="input-section">
+    <h2>Product Data</h2>
+    <div class="input-hint">
+      Format: one product per line. <strong>Product Name, Sourcing Price (CNY), Selling Price (USD), [Quantity]</strong><br>
+      Example: <code>Phone Case, 8.5, 12.99, 100</code> — Quantity is optional (default: 1 for per-unit calculation)
+    </div>
+    <textarea id="inputData" placeholder="Phone Case, 8.5, 12.99, 100
+Bluetooth Earbuds, 35, 29.99, 50
+LED Strip Light, 12, 18.99
+USB-C Cable, 3.2, 9.99, 200"></textarea>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="calculate()">Calculate All</button>
+      <button class="btn btn-secondary" onclick="loadSample()">Load Sample Data</button>
+      <button class="btn btn-secondary" onclick="document.getElementById('csvUpload').click()">Upload CSV</button>
+      <input type="file" id="csvUpload" class="file-input" accept=".csv,.txt" onchange="handleFileUpload(event)">
+      <button class="btn btn-secondary" onclick="clearAll()">Clear</button>
+    </div>
+  </div>
+
+  <!-- Results -->
+  <div class="results-section" id="resultsSection">
+    <div class="results-header">
+      <h2>Results (<span id="resultCount">0</span> products)</h2>
+      <div class="btn-row">
+        <button class="btn btn-green" onclick="exportCSV()">Export CSV</button>
+        <button class="btn btn-secondary" onclick="copyTable()">Copy Table</button>
+      </div>
+    </div>
+
+    <div class="summary" id="summary"></div>
+
+    <div class="table-wrap">
+      <table>
+        <thead id="tableHead"></thead>
+        <tbody id="tableBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Cross-sell -->
+  <div style="text-align:center;margin-top:32px;padding:24px;background:var(--surface);border:1px solid var(--border);border-radius:10px;">
+    <div style="font-size:15px;font-weight:600;margin-bottom:8px;">Want real-time calculations while browsing 1688.com?</div>
+    <div style="font-size:13px;color:var(--text2);margin-bottom:14px;">SourceCalc Chrome Extension auto-detects prices on 1688 product pages and calculates profit instantly.</div>
+    <a href="#" class="btn btn-primary" id="sourcecalcCTA">Get SourceCalc - Free</a>
+  </div>
+</div>
+
+<div class="footer">
+  BulkCalc v1.0 | Free tool by <a href="#">AIHM</a> | No data collection — all calculations run in your browser
+</div>
+
+<script>
+// ===== Cost Data (same as SourceCalc) =====
+const SHIPPING_RATES = {
+  US: { sea: 3.5, air: 12 },
+  UK: { sea: 4.0, air: 14 },
+  DE: { sea: 4.0, air: 14 },
+  JP: { sea: 3.0, air: 10 },
+  AU: { sea: 4.5, air: 15 },
+  AE: { sea: 3.5, air: 11 },
+  SA: { sea: 4.0, air: 12 }
+};
+
+const PLATFORM_FEES = {
+  amazon_fba: { referral: 0.15, fba: 3.50, label: 'Amazon FBA' },
+  amazon_fbm: { referral: 0.15, fba: 0, label: 'Amazon FBM' },
+  shopify:    { referral: 0.029, fba: 0.30, label: 'Shopify' },
+  temu:       { referral: 0.15, fba: 0, label: 'Temu' },
+  ebay:       { referral: 0.1289, fba: 0.30, label: 'eBay' },
+  tiktok:     { referral: 0.08, fba: 0, label: 'TikTok Shop' }
+};
+
+// ===== State =====
+let results = [];
+let sortCol = null;
+let sortAsc = true;
+
+// ===== Fetch exchange rate =====
+async function fetchRate() {
+  try {
+    const res = await fetch('https://open.er-api.com/v6/latest/USD');
+    const data = await res.json();
+    if (data.rates && data.rates.CNY) {
+      document.getElementById('exchangeRate').value = data.rates.CNY.toFixed(2);
+    }
+  } catch(e) { /* use default */ }
+}
+fetchRate();
+
+// ===== Parse Input =====
+function parseInput(text) {
+  const lines = text.trim().split('\n').filter(l => l.trim());
+  const products = [];
+  for (const line of lines) {
+    const parts = line.split(/[,\t;]/).map(s => s.trim());
+    if (parts.length < 3) continue;
+    const name = parts[0];
+    const sourcingCNY = parseFloat(parts[1]);
+    const sellingUSD = parseFloat(parts[2]);
+    const qty = parts[3] ? parseInt(parts[3]) : 1;
+    if (!name || isNaN(sourcingCNY) || isNaN(sellingUSD)) continue;
+    products.push({ name, sourcingCNY, sellingUSD, qty });
+  }
+  return products;
+}
+
+// ===== Calculate =====
+function calculate() {
+  const text = document.getElementById('inputData').value;
+  const products = parseInput(text);
+  if (products.length === 0) {
+    alert('No valid products found. Format: Name, Price CNY, Price USD, [Qty]');
+    return;
+  }
+
+  const market = document.getElementById('market').value;
+  const platform = document.getElementById('platform').value;
+  const shippingMethod = document.getElementById('shipping').value;
+  const weight = parseFloat(document.getElementById('weight').value) || 0.5;
+  const dutyRate = parseFloat(document.getElementById('dutyRate').value) / 100;
+  const exchangeRate = parseFloat(document.getElementById('exchangeRate').value) || 7.25;
+
+  const shippingPerKg = SHIPPING_RATES[market][shippingMethod];
+  const fees = PLATFORM_FEES[platform];
+
+  results = products.map(p => {
+    const sourcingUSD = p.sourcingCNY / exchangeRate;
+    const shippingCost = shippingPerKg * weight;
+    const dutyCost = sourcingUSD * dutyRate;
+    const platformReferral = p.sellingUSD * fees.referral;
+    const platformFixed = fees.fba;
+    const totalCost = sourcingUSD + shippingCost + dutyCost + platformReferral + platformFixed;
+    const profit = p.sellingUSD - totalCost;
+    const margin = (profit / p.sellingUSD) * 100;
+    const roi = (profit / totalCost) * 100;
+    const totalInvestment = totalCost * p.qty;
+    const totalProfit = profit * p.qty;
+
+    return {
+      name: p.name,
+      sourcingCNY: p.sourcingCNY,
+      sourcingUSD,
+      sellingUSD: p.sellingUSD,
+      shippingCost,
+      dutyCost,
+      platformFee: platformReferral + platformFixed,
+      totalCost,
+      profit,
+      margin,
+      roi,
+      qty: p.qty,
+      totalInvestment,
+      totalProfit
+    };
+  });
+
+  renderResults(market, platform, shippingMethod);
+}
+
+// ===== Render =====
+function renderResults(market, platform, shippingMethod) {
+  const section = document.getElementById('resultsSection');
+  section.classList.add('visible');
+  document.getElementById('resultCount').textContent = results.length;
+
+  // Summary
+  const profitable = results.filter(r => r.profit > 0).length;
+  const unprofitable = results.length - profitable;
+  const avgMargin = results.reduce((s,r) => s + r.margin, 0) / results.length;
+  const totalInv = results.reduce((s,r) => s + r.totalInvestment, 0);
+  const totalProf = results.reduce((s,r) => s + r.totalProfit, 0);
+  const bestProduct = results.reduce((best, r) => r.margin > best.margin ? r : best, results[0]);
+
+  document.getElementById('summary').innerHTML = `
+    <div class="summary-card"><div class="summary-value val-green">${profitable}</div><div class="summary-label">Profitable</div></div>
+    <div class="summary-card"><div class="summary-value val-red">${unprofitable}</div><div class="summary-label">Unprofitable</div></div>
+    <div class="summary-card"><div class="summary-value ${avgMargin >= 0 ? 'val-green' : 'val-red'}">${avgMargin.toFixed(1)}%</div><div class="summary-label">Avg Margin</div></div>
+    <div class="summary-card"><div class="summary-value val-accent">$${totalInv.toFixed(0)}</div><div class="summary-label">Total Investment</div></div>
+    <div class="summary-card"><div class="summary-value ${totalProf >= 0 ? 'val-green' : 'val-red'}">$${totalProf.toFixed(0)}</div><div class="summary-label">Total Profit</div></div>
+    <div class="summary-card"><div class="summary-value val-yellow">${bestProduct.name}</div><div class="summary-label">Best Margin (${bestProduct.margin.toFixed(1)}%)</div></div>
+  `;
+
+  renderTable();
+}
+
+function renderTable() {
+  const cols = [
+    { key: 'name', label: 'Product' },
+    { key: 'sourcingCNY', label: 'Source (CNY)' },
+    { key: 'sourcingUSD', label: 'Source (USD)' },
+    { key: 'sellingUSD', label: 'Sell (USD)' },
+    { key: 'shippingCost', label: 'Shipping' },
+    { key: 'dutyCost', label: 'Duty' },
+    { key: 'platformFee', label: 'Platform Fee' },
+    { key: 'totalCost', label: 'Total Cost' },
+    { key: 'profit', label: 'Profit/Unit' },
+    { key: 'margin', label: 'Margin %' },
+    { key: 'roi', label: 'ROI %' },
+    { key: 'qty', label: 'Qty' },
+    { key: 'totalProfit', label: 'Total Profit' }
+  ];
+
+  document.getElementById('tableHead').innerHTML = '<tr>' + cols.map(c =>
+    `<th class="sort-btn" onclick="sortBy('${c.key}')">${c.label} ${sortCol === c.key ? (sortAsc ? '▲' : '▼') : ''}</th>`
+  ).join('') + '</tr>';
+
+  const sorted = [...results];
+  if (sortCol) {
+    sorted.sort((a, b) => {
+      const va = typeof a[sortCol] === 'string' ? a[sortCol].toLowerCase() : a[sortCol];
+      const vb = typeof b[sortCol] === 'string' ? b[sortCol].toLowerCase() : b[sortCol];
+      return sortAsc ? (va > vb ? 1 : -1) : (va < vb ? 1 : -1);
+    });
+  }
+
+  document.getElementById('tableBody').innerHTML = sorted.map(r => {
+    const cls = r.profit >= 0 ? 'profit-positive' : 'profit-negative';
+    return `<tr>
+      <td>${r.name}</td>
+      <td>¥${r.sourcingCNY.toFixed(2)}</td>
+      <td>$${r.sourcingUSD.toFixed(2)}</td>
+      <td>$${r.sellingUSD.toFixed(2)}</td>
+      <td>$${r.shippingCost.toFixed(2)}</td>
+      <td>$${r.dutyCost.toFixed(2)}</td>
+      <td>$${r.platformFee.toFixed(2)}</td>
+      <td>$${r.totalCost.toFixed(2)}</td>
+      <td class="${cls}">$${r.profit.toFixed(2)}</td>
+      <td class="${cls}">${r.margin.toFixed(1)}%</td>
+      <td class="${cls}">${r.roi.toFixed(1)}%</td>
+      <td>${r.qty}</td>
+      <td class="${cls}">$${r.totalProfit.toFixed(2)}</td>
+    </tr>`;
+  }).join('');
+}
+
+function sortBy(col) {
+  if (sortCol === col) { sortAsc = !sortAsc; }
+  else { sortCol = col; sortAsc = true; }
+  renderTable();
+}
+
+// ===== Export =====
+function exportCSV() {
+  if (results.length === 0) return;
+  const headers = ['Product','Source CNY','Source USD','Sell USD','Shipping','Duty','Platform Fee','Total Cost','Profit/Unit','Margin %','ROI %','Qty','Total Profit'];
+  const rows = results.map(r => [
+    `"${r.name}"`, r.sourcingCNY.toFixed(2), r.sourcingUSD.toFixed(2), r.sellingUSD.toFixed(2),
+    r.shippingCost.toFixed(2), r.dutyCost.toFixed(2), r.platformFee.toFixed(2), r.totalCost.toFixed(2),
+    r.profit.toFixed(2), r.margin.toFixed(1), r.roi.toFixed(1), r.qty, r.totalProfit.toFixed(2)
+  ]);
+  const csv = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+  const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `bulkcalc_results_${new Date().toISOString().slice(0,10)}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function copyTable() {
+  if (results.length === 0) return;
+  const headers = ['Product','Source CNY','Sell USD','Total Cost','Profit','Margin','ROI','Qty','Total Profit'];
+  const rows = results.map(r => [
+    r.name, `¥${r.sourcingCNY.toFixed(2)}`, `$${r.sellingUSD.toFixed(2)}`,
+    `$${r.totalCost.toFixed(2)}`, `$${r.profit.toFixed(2)}`, `${r.margin.toFixed(1)}%`,
+    `${r.roi.toFixed(1)}%`, r.qty, `$${r.totalProfit.toFixed(2)}`
+  ]);
+  const text = [headers.join('\t'), ...rows.map(r => r.join('\t'))].join('\n');
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.querySelector('[onclick="copyTable()"]');
+    btn.textContent = 'Copied!';
+    setTimeout(() => btn.textContent = 'Copy Table', 1500);
+  });
+}
+
+// ===== File Upload =====
+function handleFileUpload(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (ev) => {
+    document.getElementById('inputData').value = ev.target.result;
+    e.target.value = '';
+  };
+  reader.readAsText(file);
+}
+
+// ===== Sample Data =====
+function loadSample() {
+  document.getElementById('inputData').value = `Phone Case Silicone, 3.5, 9.99, 200
+Bluetooth Earbuds TWS, 28, 24.99, 50
+LED Strip Light 5m, 12, 18.99, 100
+USB-C Fast Charger, 8.5, 14.99, 150
+Car Phone Mount, 6, 11.99, 120
+Laptop Stand Aluminum, 35, 39.99, 40
+Wireless Mouse, 15, 19.99, 80
+Screen Protector 3-pack, 1.8, 8.99, 300
+Ring Light 10inch, 22, 29.99, 60
+Yoga Mat 6mm, 18, 24.99, 70`;
+}
+
+function clearAll() {
+  document.getElementById('inputData').value = '';
+  document.getElementById('resultsSection').classList.remove('visible');
+  results = [];
+}
+</script>
+</body>
+</html>
