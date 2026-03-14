@@ -361,6 +361,7 @@ USB-C Cable, 3.2, 9.99, 200"></textarea>
       <div class="btn-row">
         <button class="btn btn-green" onclick="exportCSV()">Export CSV</button>
         <button class="btn btn-secondary" onclick="copyTable()">Copy Table</button>
+        <button class="btn btn-secondary" onclick="shareResults()">Share</button>
       </div>
     </div>
 
@@ -609,6 +610,28 @@ function copyTable() {
     btn.textContent = 'Copied!';
     setTimeout(() => btn.textContent = 'Copy Table', 1500);
   });
+}
+
+// ===== Share =====
+function shareResults() {
+  if (results.length === 0) return;
+  const profitable = results.filter(r => r.profit > 0).length;
+  const avgMargin = results.reduce((s,r) => s + r.margin, 0) / results.length;
+  const best = results.reduce((b, r) => r.margin > b.margin ? r : b, results[0]);
+  const text = `Analyzed ${results.length} products for cross-border selling:\n` +
+    `${profitable}/${results.length} profitable | Avg margin: ${avgMargin.toFixed(1)}%\n` +
+    `Best: ${best.name} at ${best.margin.toFixed(1)}% margin\n\n` +
+    `Free bulk calculator: https://itsukiken1.github.io/bulkcalc/`;
+
+  if (navigator.share) {
+    navigator.share({ title: 'BulkCalc Results', text }).catch(() => {});
+  } else {
+    navigator.clipboard.writeText(text).then(() => {
+      const btn = document.querySelector('[onclick="shareResults()"]');
+      btn.textContent = 'Copied!';
+      setTimeout(() => btn.textContent = 'Share', 1500);
+    });
+  }
 }
 
 // ===== File Upload =====
