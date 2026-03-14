@@ -643,6 +643,54 @@ function clearAll() {
   results = [];
 }
 </script>
+
+<section style="max-width:800px;margin:60px auto;padding:0 20px;color:var(--text)">
+<h2 style="font-size:24px;margin-bottom:24px;color:var(--accent2)">Frequently Asked Questions</h2>
+
+<details style="margin-bottom:16px;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:16px">
+<summary style="cursor:pointer;font-weight:600;font-size:15px">What is BulkCalc?</summary>
+<p style="margin-top:12px;color:var(--text2);font-size:14px;line-height:1.7">BulkCalc is a free batch profit calculator for cross-border e-commerce sellers. It lets you paste a list of products with sourcing prices (in CNY) and selling prices (in USD), and instantly calculates profit margins for all of them — including international shipping, customs duties, and platform fees for Amazon, Shopify, Temu, eBay, and TikTok Shop.</p>
+</details>
+
+<details style="margin-bottom:16px;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:16px">
+<summary style="cursor:pointer;font-weight:600;font-size:15px">How do I use the batch calculator?</summary>
+<p style="margin-top:12px;color:var(--text2);font-size:14px;line-height:1.7">Enter one product per line in the format: Product Name, Price in CNY, Selling Price in USD, Quantity. For example: "Phone Case, 3.5, 9.99, 200". You can also upload a CSV file or click "Load Sample" to see example data. Select your destination country and selling platform, then click Calculate.</p>
+</details>
+
+<details style="margin-bottom:16px;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:16px">
+<summary style="cursor:pointer;font-weight:600;font-size:15px">What costs are included in the profit calculation?</summary>
+<p style="margin-top:12px;color:var(--text2);font-size:14px;line-height:1.7">BulkCalc includes: product sourcing cost (converted from CNY at real-time exchange rates), international shipping (sea or air freight based on destination), customs duties and tariffs, and platform-specific fees (Amazon referral + FBA fees, Shopify transaction fees, Temu commission, eBay fees, TikTok Shop fees). The result shows profit per unit, margin %, ROI %, and total profit.</p>
+</details>
+
+<details style="margin-bottom:16px;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:16px">
+<summary style="cursor:pointer;font-weight:600;font-size:15px">Is BulkCalc free?</summary>
+<p style="margin-top:12px;color:var(--text2);font-size:14px;line-height:1.7">Yes, BulkCalc is completely free with no signup required. It runs entirely in your browser — no data is sent to any server. Your product data stays on your device.</p>
+</details>
+
+<details style="margin-bottom:16px;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:16px">
+<summary style="cursor:pointer;font-weight:600;font-size:15px">What platforms and countries are supported?</summary>
+<p style="margin-top:12px;color:var(--text2);font-size:14px;line-height:1.7">Platforms: Amazon FBA, Amazon FBM, Shopify, Temu, eBay, and TikTok Shop. Destination countries: USA, UK, Germany, Japan, Australia, Canada, France, and more. Each country has specific shipping rates and duty calculations.</p>
+</details>
+
+<p style="margin-top:32px;text-align:center;font-size:13px;color:var(--text2)">
+Need shipping cost estimates? Try <a href="https://itsukiken1.github.io/shipcalc/" style="color:var(--accent2)">ShipCalc</a> for detailed freight rate comparisons.
+Sourcing from 1688? <a href="https://itsukiken1.github.io/sourcecalc/" style="color:var(--accent2)">SourceCalc</a> calculates profit directly on product pages.
+</p>
+</section>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {"@type": "Question", "name": "What is BulkCalc?", "acceptedAnswer": {"@type": "Answer", "text": "BulkCalc is a free batch profit calculator for cross-border e-commerce sellers. It lets you paste a list of products with sourcing prices and selling prices, and instantly calculates profit margins for all of them including shipping, customs, and platform fees."}},
+    {"@type": "Question", "name": "How do I use the batch calculator?", "acceptedAnswer": {"@type": "Answer", "text": "Enter one product per line: Product Name, Price in CNY, Selling Price in USD, Quantity. You can also upload a CSV file. Select your destination country and platform, then click Calculate."}},
+    {"@type": "Question", "name": "What costs are included in the profit calculation?", "acceptedAnswer": {"@type": "Answer", "text": "Product sourcing cost converted from CNY, international shipping, customs duties, and platform-specific fees for Amazon, Shopify, Temu, eBay, and TikTok Shop."}},
+    {"@type": "Question", "name": "Is BulkCalc free?", "acceptedAnswer": {"@type": "Answer", "text": "Yes, BulkCalc is completely free with no signup required. It runs entirely in your browser and no data is sent to any server."}},
+    {"@type": "Question", "name": "What platforms and countries are supported?", "acceptedAnswer": {"@type": "Answer", "text": "Platforms: Amazon FBA, Amazon FBM, Shopify, Temu, eBay, TikTok Shop. Countries: USA, UK, Germany, Japan, Australia, Canada, France, and more."}}
+  ]
+}
+</script>
 <script data-goatcounter="https://aihm.goatcounter.com/count"
         async src="//gc.zgo.at/count.js"></script>
 </body>
