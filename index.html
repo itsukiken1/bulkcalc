@@ -6,6 +6,9 @@
 <title>BulkCalc - Batch Profit Calculator for Cross-Border Sellers</title>
 <meta name="description" content="Calculate profit margins for multiple products at once. Paste your product list, get instant profit analysis with shipping, customs, and platform fees.">
 <link rel="canonical" href="https://itsukiken1.github.io/bulkcalc/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <!-- Open Graph -->
 <meta property="og:title" content="BulkCalc - Free Batch Profit Calculator for Cross-Border Sellers">
 <meta property="og:description" content="Calculate profit margins for multiple products at once. Includes shipping, customs, and platform fees for Amazon, Shopify, Temu and more.">
@@ -35,21 +38,23 @@
 </script>
 <style>
 :root {
-  --bg: #0f0f17;
-  --surface: #181824;
-  --surface2: #1e1e2e;
-  --border: #2a2a3e;
-  --text: #e0e0ec;
-  --text2: #7a7a96;
+  --bg: #09090F;
+  --surface: #13131F;
+  --surface2: #1a1a2a;
+  --border: #252538;
+  --text: #FFFFFF;
+  --text2: #8585A0;
   --accent: #6366f1;
   --accent2: #818cf8;
   --green: #22c55e;
   --red: #ef4444;
   --yellow: #eab308;
+  --font-display: 'Space Grotesk', sans-serif;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-family: var(--font-body);
   background: var(--bg);
   color: var(--text);
   line-height: 1.6;
@@ -66,6 +71,7 @@ body {
   background: var(--surface);
 }
 .header h1 {
+  font-family: var(--font-display);
   font-size: 18px;
   font-weight: 700;
   background: linear-gradient(135deg, var(--accent), #a78bfa);
